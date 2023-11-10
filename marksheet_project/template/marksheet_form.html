@@ -4,11 +4,41 @@
     <input type="submit" value="Submit">
     
 </form>
+
+{% comment %} Question a  {% endcomment %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#marksheet-form').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "ajax_save_marksheet" %}',
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.success) {
+                        $('#form-messages').text('MarkSheet saved successfully.');
+                        $('#marksheet-form')[0].reset();
+                    } else {
+                        $('#form-messages').text('Error: ' + JSON.stringify(data.errors));
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+{% comment %} Question-b  {% endcomment %}
 $(document).ready( function () {
     $('#student-table').DataTable({
         "serverSide": true,
         "ajax": {
-            "url": "/get_students/",  // Modify the URL to match your view
+            "url": "/get_students/",  
             "dataSrc": "data",
         },
         "columns": [
@@ -20,7 +50,7 @@ $(document).ready( function () {
             { "data": "score4" },
             { "data": "score5" },
         ],
-        "pagingType": "full_numbers",  // Add pagination controls
+        "pagingType": "full_numbers", 
     });
 });
 
